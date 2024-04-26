@@ -7,6 +7,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public static final int SELECTION_START = 1239,
                             SELECTION_X_PADDING = 50,
                             SELECTION_Y_PADDING  = 70;
+    public static final int PLAY_X_PADDING = 30,
+                            PLAY_WIDTH = (WINDOW_WIDTH - SELECTION_START) - PLAY_X_PADDING*2,
+                            PLAY_HEIGHT = 100,
+                            PLAY_X_START = SELECTION_START + PLAY_X_PADDING,
+                            PLAY_Y_START = WINDOW_HEIGHT - PLAY_HEIGHT - PLAY_X_PADDING;
+
+    public static final int BALLOON_STARTING_X = -20,
+                            BALLOON_STARTING_Y = 328;
     public static final int DART_MONKEY = 0,
                             GLUE_MONKEY = 1,
                             CANNON = 2;
@@ -18,9 +26,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private ArrayList<Monkey> monkeys;
     private Wave[] waves;
     private boolean isOver;
+    private boolean isPlaying;
     private GameViewer viewer;
 
-    public Game() {
+    public Game() throws Exception {
         money = 100;
         health = 200;
         wave = 0;
@@ -31,10 +40,11 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         waves = new Wave[1];
         ArrayList<Balloon> loons = new ArrayList<Balloon>();
         for (int i = 0; i < 15; i++) {
-            loons.add(new Balloon(1, waves[0]));
+            loons.add(new Balloon(1, i, waves[0]));
         }
         waves[0] = new Wave(loons);
         isOver = false;
+        isPlaying = false;
         viewer = new GameViewer(this);
 
         this.viewer.addMouseListener(this);
@@ -42,7 +52,20 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         // something for mouse input
     }
 
-    public static void main(String[] args) {
+    public void play() {
+        if (isPlaying) {
+            wave++;
+            if (wave == waves.length) {
+                System.out.println("You won!");
+                isOver = true;
+            }
+            waves[wave].moveBalloons();
+        } else {
+            // present play button
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
         Game g = new Game();
     }
 
@@ -53,6 +76,11 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
 
     public int getHealth() {
         return health;
+    }
+
+    public boolean isPlaying() {
+//        return isPlaying;
+        return true;
     }
 
     public Wave getCurrentWave() {
@@ -88,9 +116,16 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                 // if nothing is selected, and they click somewhere else, do nothing
                 return;
             }
-            monkeys.add(new Monkey(selected, x, y));
-            selections[selected] = false;
-            System.out.println("new monkey");
+            if (isOnMonkey(x, y)) {
+                System.out.println("on monkey dummy");
+            }
+            // Check if placed on the path
+            else if (viewer.containsGray(x, y, Sprite.DEFAULT_SPRITE_LENGTH, Sprite.DEFAULT_SPRITE_LENGTH)) {
+                monkeys.add(new Monkey(selected, x, y));
+                selections[selected] = false;
+            } else {
+                System.out.println("on gray dummy");
+            }
             viewer.repaint();
         }
         else {
@@ -98,6 +133,18 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             viewer.repaint();
         }
     }
+
+    private boolean isOnMonkey(int x, int y) {
+        for (Monkey m: monkeys) {
+            if (Math.abs(m.getX() - x) < Sprite.DEFAULT_SPRITE_LENGTH / 3 &&
+                    Math.abs(m.getY() - y) < Sprite.DEFAULT_SPRITE_LENGTH / 3) {
+                System.out.println(Math.abs(m.getX() - x));
+                return true;
+            }
+        }
+        return false;
+    }
+
     private int whichSelected() {
         for (int i = 0; i < selections.length; i++) {
             if (selections[i]) {

@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="379ee159-b628-4695-8b74-60c4654e9c7f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Resources/MonkeyMeadow.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Resources/MonkeySelections/0.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Resources/Monkeys/0.png" afterDir="false" />
+    <list default="true" id="379ee159-b628-4695-8b74-60c4654e9c7f" name="Changes" comment="prototype of placing monkeys onto the field">
+      <change afterPath="$PROJECT_DIR$/Resources/Balloons/1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Resources/Balloons/2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Resources/Balloons/3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Resources/Balloons/4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Resources/Balloons/5.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/MonkeyMeadow.png" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/MonkeyMeadow.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Balloon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Balloon.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameViewer.java" afterDir="false" />
@@ -46,6 +48,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.Default.executor": "Run",
     "Application.Game.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -59,10 +62,20 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Resources/Balloons" />
+      <recent name="$PROJECT_DIR$/Resources" />
       <recent name="$PROJECT_DIR$/Resources/MonkeySelections" />
       <recent name="$PROJECT_DIR$/Resources/Monkeys" />
-      <recent name="$PROJECT_DIR$/Resources" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Default" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Game" />
+      <module name="BloonsTD" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -73,6 +86,19 @@
       <option name="presentableId" value="Default" />
       <updated>1712693531865</updated>
     </task>
+    <task id="LOCAL-00001" summary="prototype of placing monkeys onto the field">
+      <option name="closed" value="true" />
+      <created>1713980561260</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713980561260</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="prototype of placing monkeys onto the field" />
+    <option name="LAST_COMMIT_MESSAGE" value="prototype of placing monkeys onto the field" />
   </component>
 </project>

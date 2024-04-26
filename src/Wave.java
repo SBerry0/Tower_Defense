@@ -12,20 +12,30 @@ public class Wave {
         return wave;
     }
 
+    public void moveBalloons() {
+        for (Balloon b : wave) {
+            b.move();
+        }
+    }
+    public boolean isOver() {
+        return wave.isEmpty();
+    }
+
     // Calculate the coordinates of the balloon closest to the inputted coordinates
     public Balloon getClosestBalloon(int x, int y) {
         int smallestDist = Integer.MAX_VALUE;
         Balloon closestBalloon = null;
-        for (Balloon b : wave) {
-            // pythag
-        }
-        if (closestBalloon == null) {
-            return null;
+        for (int i = 0; i < wave.size(); i++) {
+            int dist = wave.get(i).getDistance(x, y);
+            if (dist < smallestDist) {
+                smallestDist = dist;
+                closestBalloon = wave.get(i);
+            }
         }
         return closestBalloon;
     }
 
     public void remove(Balloon balloon) {
-
+        wave.remove(balloon);
     }
 }

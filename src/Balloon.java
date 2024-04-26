@@ -3,15 +3,17 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Balloon extends Sprite {
-    private static final int STARTING_X = 0,
-                            STARTING_Y = 70;
+
     private static final int[] SPEEDS = {10, 10, 15, 20, 5, 10};
     private int health;
     private int speed;
     private Wave balloons;
 
-    public Balloon(int health, Wave balloons) {
-        super(new ImageIcon("Resources/Balloons/" + health + ".png").getImage(), STARTING_X, STARTING_Y);
+    public Balloon(int health, int balloonNum, Wave balloons) {
+        super(new ImageIcon("Resources/Balloons/" + health + ".png").getImage(),
+                Game.BALLOON_STARTING_X - (balloonNum* (int) (Math.random() + 12) + 8),
+                Game.BALLOON_STARTING_Y,
+                49, 63);
 
         if (health > 6 || health < 0) {
             balloons.remove(this);
@@ -25,13 +27,19 @@ public class Balloon extends Sprite {
 
     public void move() {
         // i have no idea how to make it follow a set path.....
-        // SOmething like a csv of EAST, EAST, EAST.... NORTH, NORTH
+        // Something like a csv of EAST, EAST, EAST.... NORTH, NORTH
         if (health > 6 || health < 0) {
             balloons.remove(this);
         }
         if (super.getX() > 700) {
 
         }
+    }
+
+    public int getDistance(int x, int y) {
+        int a = super.getX() - x;
+        int b = super.getY() - y;
+        return (int) (Math.sqrt(1.0 * (a*a)+(b*b)));
     }
 
     public void checkCompleted(Game g) {
@@ -42,7 +50,7 @@ public class Balloon extends Sprite {
     }
 
     public void draw(Graphics g, GameViewer viewer) {
-        g.drawImage(super.getImage(), super.getX(), super.getY(), viewer);
+        super.draw(g, viewer);
     }
 
     public String toString() {
