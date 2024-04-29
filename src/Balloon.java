@@ -7,35 +7,35 @@ public class Balloon extends Sprite {
     private static final int[] SPEEDS = {10, 10, 15, 20, 5, 10};
     private int health;
     private int speed;
-    private Wave balloons;
     private int direction;
     private int nodeNum;
+    private boolean isAlive;
 
     // TODO: Create isAlive boolean and change that instead of removing it from its own arrayList
-    public Balloon(int health, int balloonNum, Wave balloons) {
+    public Balloon(int health, int balloonNum) {
         super(new ImageIcon("Resources/Balloons/" + health + ".png").getImage(),
-                Game.BALLOON_STARTING_X - (balloonNum* (int) (Math.random() + 12) + 8),
+                Game.BALLOON_STARTING_X - (balloonNum* (int) (Math.random() * 25) + 8),
                 Game.BALLOON_STARTING_Y,
                 49, 63);
-        this.balloons = balloons;
         if (health > 6 || health < 0) {
-            balloons.remove(this);
+            isAlive = false;
         }
         else {
             this.speed = SPEEDS[health - 1];
             this.health = health;
+            isAlive = true;
         }
         this.direction = Game.EAST;
         nodeNum = 0;
     }
 
     public void move(Game g) {
-        if (health > 6 || health < 0) {
-            balloons.remove(this);
+        if ((health > 6 || health < 0) && isAlive) {
+            isAlive = false;
         }
-        if (super.getY() > Game.WINDOW_HEIGHT) {
+        if (super.getY() > Game.WINDOW_HEIGHT && isAlive) {
             g.reduceHealth(health);
-            balloons.remove(this);
+            isAlive = false;
         }
         switch (direction) {
             case Game.NORTH:
@@ -53,7 +53,7 @@ public class Balloon extends Sprite {
         }
         if (g.getNode(nodeNum).isOnNode(super.getX(), super.getY())) {
             direction = g.getNode(nodeNum).getNewDirection();
-            nodeNum++;
+            nextNode();
         }
 
     }
@@ -68,10 +68,7 @@ public class Balloon extends Sprite {
     }
 
     public void draw(Graphics g, GameViewer viewer) {
-        super.draw(g, viewer);
-    }
-
-    public String toString() {
-        return super.getX() + ", " + super.getY();
+        if (isAlive)
+            super.draw(g, viewer);
     }
 }

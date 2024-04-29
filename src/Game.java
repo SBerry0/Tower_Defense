@@ -9,17 +9,17 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                             WEST = 36;
     public static final int NODE_NUM_LENGTH = 65;
     public static final BalloonNode[] NODES = {new BalloonNode(605, 300, NORTH),
-                                                new BalloonNode(585, 100, WEST),
-                                                new BalloonNode(345, 100, SOUTH),
-                                                new BalloonNode(365, 630, WEST),
-                                                new BalloonNode(145, 605, NORTH),
-                                                new BalloonNode(175, 410, EAST),
-                                                new BalloonNode(770, 425, NORTH),
-                                                new BalloonNode(760, 215, EAST),
-                                                new BalloonNode(930, 220, SOUTH),
-                                                new BalloonNode(905, 580, WEST),
-                                                new BalloonNode(495, 555, SOUTH),
-                                                new BalloonNode(0, 0, 0)};
+                            new BalloonNode(585, 100, WEST),
+                            new BalloonNode(345, 100, SOUTH),
+                            new BalloonNode(365, 630, WEST),
+                            new BalloonNode(145, 605, NORTH),
+                            new BalloonNode(175, 410, EAST),
+                            new BalloonNode(770, 425, NORTH),
+                            new BalloonNode(760, 215, EAST),
+                            new BalloonNode(930, 220, SOUTH),
+                            new BalloonNode(905, 580, WEST),
+                            new BalloonNode(495, 555, SOUTH),
+                            new BalloonNode(0, 0, 0)};
     public static final int SLEEP_TIME = 75;
     public static final int WINDOW_HEIGHT = 798,
                             WINDOW_WIDTH = 1539;
@@ -60,7 +60,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         waves = new Wave[1];
         ArrayList<Balloon> loons = new ArrayList<Balloon>();
         for (int i = 0; i < 15; i++) {
-            loons.add(new Balloon(1, i, waves[0]));
+            loons.add(new Balloon(1, i));
         }
         waves[0] = new Wave(loons);
         isOver = false;
@@ -71,21 +71,20 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         this.viewer.addMouseMotionListener(this);
         timer = new Timer(SLEEP_TIME, this);
         timer.start();
-        // something for mouse input
     }
 
-    public void play() {
-        if (isPlaying) {
-            wave++;
-            if (wave == waves.length) {
-                System.out.println("You won!");
-                isOver = true;
-            }
-//            waves[wave].moveBalloons(this);
-        } else {
-            // present play button
-        }
-    }
+//    public void play() {
+//        if (isPlaying) {
+//            wave++;
+//            if (wave == waves.length) {
+//                System.out.println("You won!");
+//                isOver = true;
+//            }
+////            waves[wave].moveBalloons(this);
+//        } else {
+//            // present play button
+//        }
+//    }
 
     public static void main(String[] args) throws Exception {
         Game g = new Game();
@@ -132,6 +131,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         if (health <= 0) {
            isOver = true;
         }
+        System.out.println(health);
     }
 
     @Override
@@ -198,31 +198,6 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
-
-    @Override
     public void mouseMoved(MouseEvent e) {
         if (whichSelected() != -1) {
             int x = e.getX();
@@ -240,4 +215,21 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             getCurrentWave().moveBalloons(this);
         viewer.repaint();
     }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
+
+    @Override
+    public void mouseDragged(MouseEvent e) {}
 }

@@ -42,7 +42,10 @@ public class Sprite {
     }
 
     public void draw(Graphics g, GameViewer v) {
-
         g.drawImage(image, x-width/2, y-height/2, width, height, v);
+    }
+
+    public String toString() {
+        return x + ", " + y;
     }
 }

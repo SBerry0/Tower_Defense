@@ -86,8 +86,8 @@ public class GameViewer extends JFrame {
         if (!game.isPlaying()) {
             drawPlayButton(g);
         }
-        for (BalloonNode node : Game.NODES) {
-            node.draw(g);
-        }
+//        for (BalloonNode node : Game.NODES) {
+//            node.draw(g);
+//        }
     }
 }
