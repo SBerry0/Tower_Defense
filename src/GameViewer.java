@@ -5,7 +5,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class GameViewer extends JFrame {
-    public static final int GRAY_TOLERANCE = 800;
+    public static final int GRAY_TOLERANCE = 800,
+                            COLOR_TOLERANCE = 15;
     private BufferedImage map;
     private Game game;
 
@@ -20,7 +21,7 @@ public class GameViewer extends JFrame {
         createBufferStrategy(2);
     }
 
-    public boolean containsGray(int xValue, int yValue, int width, int height) {
+    public boolean containsGray(int xValue, int yValue) {
         // From https://www.tutorialspoint.com/how-to-get-pixels-rgb-values-of-an-image-using-java-opencv-library
         // Modified by Sohum Berry
 
@@ -36,9 +37,9 @@ public class GameViewer extends JFrame {
                     //Creating a Color object from pixel value
                     Color color = new Color(pixel, true);
                     int avg = getAverage(new int[]{color.getRed(), color.getGreen(), color.getBlue()});
-                    if (Math.abs(color.getRed() - avg) < 15 &&
-                            Math.abs(color.getGreen() - avg) < 15 &&
-                            Math.abs(color.getBlue() - avg) < 15) {
+                    if (Math.abs(color.getRed() - avg) < COLOR_TOLERANCE &&
+                            Math.abs(color.getGreen() - avg) < COLOR_TOLERANCE &&
+                            Math.abs(color.getBlue() - avg) < COLOR_TOLERANCE) {
                         numGray++;
                         if (numGray > GRAY_TOLERANCE) {
                             return false;
@@ -59,8 +60,14 @@ public class GameViewer extends JFrame {
 
     public void drawPlayButton(Graphics g) {
         g.setColor(Color.green);
+        // change to image of gradient later
         g.fillRoundRect(Game.PLAY_X_START, Game.PLAY_Y_START, Game.PLAY_WIDTH, Game.PLAY_HEIGHT, 20, 20);
-
+        Polygon p = new Polygon();
+        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23, Game.PLAY_Y_START + 15);
+        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23, Game.PLAY_Y_START + (Game.PLAY_HEIGHT-15));
+        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23 + (int) (Math.sqrt(Math.pow((Game.PLAY_HEIGHT-30), 2) - Math.pow((Game.PLAY_HEIGHT-30)/2, 2))), Game.PLAY_Y_START + (Game.PLAY_HEIGHT-30)/2 + 15);
+        g.setColor(Color.WHITE);
+        g.fillPolygon(p);
     }
 
     public void paint(Graphics g) {
@@ -68,14 +75,19 @@ public class GameViewer extends JFrame {
         g.fillRect(0, 0, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
         g.drawImage(map, 0, 0, Game.SELECTION_START, Game.WINDOW_HEIGHT, this);
         Monkey.drawMonkeySelectable(g, this, Game.DART_MONKEY, Game.SELECTION_START + Game.SELECTION_X_PADDING, Game.SELECTION_Y_PADDING, game.getSelections()[Game.DART_MONKEY]);
-        for (Balloon b : game.getCurrentWave().getBalloons()) {
-            b.draw(g, this);
+        if (game.isPlaying()) {
+            for (Balloon b : game.getCurrentWave().getBalloons()) {
+                b.draw(g, this);
+            }
         }
         for (Monkey m : game.getMonkeys()) {
             m.draw(g, this);
         }
-        if (game.isPlaying()) {
+        if (!game.isPlaying()) {
             drawPlayButton(g);
+        }
+        for (BalloonNode node : Game.NODES) {
+            node.draw(g);
         }
     }
 }

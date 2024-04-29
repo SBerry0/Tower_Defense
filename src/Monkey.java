@@ -70,4 +70,8 @@ public class Monkey extends Sprite{
         Balloon balloon = wave.getClosestBalloon(super.getX(), super.getY());
         return balloon.getDistance(super.getX(), super.getY());
     }
+
+    public int getRange() {
+        return range;
+    }
 }

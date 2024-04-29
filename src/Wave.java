@@ -12,9 +12,9 @@ public class Wave {
         return wave;
     }
 
-    public void moveBalloons() {
+    public void moveBalloons(Game g) {
         for (Balloon b : wave) {
-            b.move();
+            b.move(g);
         }
     }
     public boolean isOver() {

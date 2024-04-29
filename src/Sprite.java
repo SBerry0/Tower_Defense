@@ -33,6 +33,14 @@ public class Sprite {
         return y;
     }
 
+    public void addX(int x) {
+        this.x += x;
+    }
+
+    public void addY(int y) {
+        this.y += y;
+    }
+
     public void draw(Graphics g, GameViewer v) {
 
         g.drawImage(image, x-width/2, y-height/2, width, height, v);
