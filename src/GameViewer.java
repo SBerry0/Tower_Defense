@@ -86,6 +86,15 @@ public class GameViewer extends JFrame {
         if (!game.isPlaying()) {
             drawPlayButton(g);
         }
+        for (int i = 0; i < 3; i++) {
+            g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
+            g.setColor(Color.BLACK);
+            g.drawString(game.getHealthDigit(i), Game.HEALTH_X_PADDING + i*Game.HEALTH_SPACING, Game.HEALTH_Y_PADDING);
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
+            g.drawString(game.getHealthDigit(i), Game.HEALTH_X_PADDING + i*(Game.HEALTH_SPACING+2), Game.HEALTH_Y_PADDING-2);
+        }
+
 //        for (BalloonNode node : Game.NODES) {
 //            node.draw(g);
 //        }

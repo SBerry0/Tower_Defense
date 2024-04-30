@@ -18,10 +18,7 @@ public class BalloonNode {
     }
 
     public boolean isOnNode(int x, int y) {
-        if (x > minX && x < maxX && y > minY && y < maxY) {
-            return true;
-        }
-        return false;
+        return x > minX && x < maxX && y > minY && y < maxY;
     }
 
     public void draw(Graphics g) {

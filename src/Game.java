@@ -31,9 +31,15 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                             PLAY_HEIGHT = 100,
                             PLAY_X_START = SELECTION_START + PLAY_X_PADDING,
                             PLAY_Y_START = WINDOW_HEIGHT - PLAY_HEIGHT - PLAY_X_PADDING;
+    public static final int HEALTH_X_PADDING = 75,
+                            HEART_X_PADDING = 60,
+                            HEALTH_Y_PADDING = 75,
+                            HEART_Y_PADDING = 60,
+                            HEALTH_SPACING = 20;
 
     public static final int BALLOON_STARTING_X = -20,
-                            BALLOON_STARTING_Y = 328;
+                            BALLOON_STARTING_Y = 328,
+                            BALLOON_SEPARATION = 14;
     public static final int DART_MONKEY = 0,
                             GLUE_MONKEY = 1,
                             CANNON = 2;
@@ -73,19 +79,6 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         timer.start();
     }
 
-//    public void play() {
-//        if (isPlaying) {
-//            wave++;
-//            if (wave == waves.length) {
-//                System.out.println("You won!");
-//                isOver = true;
-//            }
-////            waves[wave].moveBalloons(this);
-//        } else {
-//            // present play button
-//        }
-//    }
-
     public static void main(String[] args) throws Exception {
         Game g = new Game();
     }
@@ -94,9 +87,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         monkeys.add(monkey);
     }
 
-
     public int getHealth() {
         return health;
+    }
+    public String getHealthDigit(int i) {
+        if (Integer.toString(health).length() <= i) {
+            return 0 + "";
+        }
+        return "" + (Integer.toString(health)).charAt(i);
     }
 
     public BalloonNode getNode(int nodeNum) {

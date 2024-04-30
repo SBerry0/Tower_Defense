@@ -11,10 +11,9 @@ public class Balloon extends Sprite {
     private int nodeNum;
     private boolean isAlive;
 
-    // TODO: Create isAlive boolean and change that instead of removing it from its own arrayList
     public Balloon(int health, int balloonNum) {
         super(new ImageIcon("Resources/Balloons/" + health + ".png").getImage(),
-                Game.BALLOON_STARTING_X - (balloonNum* (int) (Math.random() * 25) + 8),
+                Game.BALLOON_STARTING_X - (balloonNum * Game.BALLOON_SEPARATION),
                 Game.BALLOON_STARTING_Y,
                 49, 63);
         if (health > 6 || health < 0) {
