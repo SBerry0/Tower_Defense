@@ -36,6 +36,14 @@ public class Wave {
         return closestBalloon;
     }
 
+    public void refreshBalloons() {
+        for (int i = 0; i < getBalloons().size(); i++) {
+            if (!getBalloons().get(i).isAlive()) {
+                getBalloons().remove(i--);
+            }
+        }
+    }
+
     public int getClosestBalloonDist(int x, int y) {
         int smallestDist = Integer.MAX_VALUE;
         for (int i = 0; i < wave.size(); i++) {

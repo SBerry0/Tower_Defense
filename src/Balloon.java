@@ -32,8 +32,18 @@ public class Balloon extends Sprite {
         health --;
         if (health <= 0) {
             isAlive = false;
-
+        } else {
+            refreshBalloonState();
         }
+    }
+
+    public void refreshBalloonState() {
+        super.changeImage(new ImageIcon("Resources/Balloons/" + health + ".png").getImage());
+        this.speed = SPEEDS[health - 1];
+    }
+
+    public boolean isAlive() {
+        return isAlive;
     }
 
     public void move(Game g) {

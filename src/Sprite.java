@@ -48,4 +48,8 @@ public class Sprite {
     public String toString() {
         return x + ", " + y;
     }
+
+    protected void changeImage(Image image) {
+        this.image = image;
+    }
 }

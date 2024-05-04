@@ -83,9 +83,9 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         ArrayList<Balloon> loons2 = new ArrayList<Balloon>();
         for (int i = 0; i < 15; i++) {
             loons.add(new Balloon(1, i));
-//            loons2.add(new Balloon(1, i));
+            loons2.add(new Balloon(1, i));
         }
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             loons2.add(new Balloon(2, i));
         }
         waves[0] = new Wave(loons2);
@@ -207,12 +207,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             } else {
                 System.out.println("on gray dummy");
             }
-//            viewer.repaint();
         }
         else {
             selections[monkeyType] = !selections[monkeyType];
-//            viewer.repaint();
         }
+    }
+
+    public void incrementMoney() {
+        money++;
     }
 
     private boolean playButtonIsClicked(int x, int y) {
@@ -256,10 +258,11 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         if (isPlaying)
             getCurrentWave().moveBalloons(this);
         refreshProjectiles();
+        getCurrentWave().refreshBalloons();
         incrementCounter();
 //        System.out.println(counter);
         for (Projectile p : activeProjectiles) {
-            p.move(getCurrentWave());
+            p.move(this);
         }
         for (Monkey m : monkeys) {
 //            System.out.println("monkey: " + m.getDelayNum());

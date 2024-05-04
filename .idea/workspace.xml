@@ -4,16 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="379ee159-b628-4695-8b74-60c4654e9c7f" name="Changes" comment="Health is being displayed with an outline">
-      <change afterPath="$PROJECT_DIR$/Resources/black coin.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Resources/black heart.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Resources/coin.png" afterDir="false" />
+    <list default="true" id="379ee159-b628-4695-8b74-60c4654e9c7f" name="Changes" comment="V1 Code, shooting works">
+      <change afterPath="$PROJECT_DIR$/Resources/Darts/0.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Balloon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Balloon.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameViewer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Monkey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monkey.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Projectile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Projectile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Sprite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Sprite.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Wave.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,6 +55,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Resources/Darts" />
       <recent name="$PROJECT_DIR$/Resources" />
       <recent name="$PROJECT_DIR$/Resources/Balloons" />
       <recent name="$PROJECT_DIR$/Resources/MonkeySelections" />
@@ -122,7 +120,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714496066870</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="V1 Code, shooting works">
+      <option name="closed" value="true" />
+      <created>1714802663689</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1714802663689</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -131,6 +137,7 @@
     <MESSAGE value="Balloons move on the path of the map, however a runtime error occurs when it exits. TODO: create a boolean instance variable for balloon to check if it's still alive (josh's idea) instead of removing it from its own arrayList." />
     <MESSAGE value="Balloon bug fixed. Next step is to create a health counter in the front end. After that I have to get Monkeys shooting at closest balloons. Then I have to get a money system in place. Then I have to get different types of monkeys." />
     <MESSAGE value="Health is being displayed with an outline" />
-    <option name="LAST_COMMIT_MESSAGE" value="Health is being displayed with an outline" />
+    <MESSAGE value="V1 Code, shooting works" />
+    <option name="LAST_COMMIT_MESSAGE" value="V1 Code, shooting works" />
   </component>
 </project>
