@@ -29,10 +29,23 @@ public class Wave {
             int dist = wave.get(i).getDistance(x, y);
             if (dist < smallestDist) {
                 smallestDist = dist;
+//                System.out.println("distance: " + smallestDist);
                 closestBalloon = wave.get(i);
             }
         }
         return closestBalloon;
+    }
+
+    public int getClosestBalloonDist(int x, int y) {
+        int smallestDist = Integer.MAX_VALUE;
+        for (int i = 0; i < wave.size(); i++) {
+            int dist = wave.get(i).getDistance(x, y);
+            if (dist < smallestDist) {
+                smallestDist = dist;
+//                System.out.println("distance: " + smallestDist);
+            }
+        }
+        return smallestDist;
     }
 
     public void remove(Balloon balloon) {

@@ -17,6 +17,7 @@ public class GameViewer extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Tower Defense");
         this.setSize(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
+        this.add(new DrawingPanel());
         this.setVisible(true);
         createBufferStrategy(2);
     }
@@ -70,33 +71,60 @@ public class GameViewer extends JFrame {
         g.fillPolygon(p);
     }
 
-    public void paint(Graphics g) {
-        g.setColor(Color.GRAY);
-        g.fillRect(0, 0, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
-        g.drawImage(map, 0, 0, Game.SELECTION_START, Game.WINDOW_HEIGHT, this);
-        Monkey.drawMonkeySelectable(g, this, Game.DART_MONKEY, Game.SELECTION_START + Game.SELECTION_X_PADDING, Game.SELECTION_Y_PADDING, game.getSelections()[Game.DART_MONKEY]);
-        if (game.isPlaying()) {
-            for (Balloon b : game.getCurrentWave().getBalloons()) {
-                b.draw(g, this);
+    // Found this code online to stop the flickering of the screen
+    private class DrawingPanel extends JPanel {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.setColor(Color.GRAY);
+            g.fillRect(0, 0, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
+            g.drawImage(map, 0, 0, Game.SELECTION_START, Game.WINDOW_HEIGHT, this);
+            Monkey.drawMonkeySelectable(g, GameViewer.this, Game.DART_MONKEY, Game.SELECTION_START + Game.SELECTION_X_PADDING, Game.SELECTION_Y_PADDING, game.getSelections()[Game.DART_MONKEY]);
+            if (game.isPlaying()) {
+                for (Balloon b : game.getCurrentWave().getBalloons()) {
+                    b.draw(g, GameViewer.this);
+                }
             }
-        }
-        for (Monkey m : game.getMonkeys()) {
-            m.draw(g, this);
-        }
-        if (!game.isPlaying()) {
-            drawPlayButton(g);
-        }
-        for (int i = 0; i < 3; i++) {
-            g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
-            g.setColor(Color.BLACK);
-            g.drawString(game.getHealthDigit(i), Game.HEALTH_X_PADDING + i*Game.HEALTH_SPACING, Game.HEALTH_Y_PADDING);
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
-            g.drawString(game.getHealthDigit(i), Game.HEALTH_X_PADDING + i*(Game.HEALTH_SPACING+2), Game.HEALTH_Y_PADDING-2);
-        }
+            for (Monkey m : game.getMonkeys()) {
+                m.draw(g, GameViewer.this);
+            }
+            if (!game.isPlaying()) {
+                drawPlayButton(g);
+            }
+            g.drawImage(new ImageIcon("Resources/black heart.png").getImage(), Game.HEART_X_PADDING+2, Game.HEART_Y_PADDING-3, Game.HEART_WIDTH, Game.HEART_HEIGHT, this);
+            g.drawImage(new ImageIcon("Resources/heart.png").getImage(), Game.HEART_X_PADDING, Game.HEART_Y_PADDING, Game.HEART_WIDTH, Game.HEART_HEIGHT, this);
+            for (int i = 0; i < 3; i++) {
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
+                g.setColor(Color.BLACK);
+                g.drawString(game.getHealthDigit(i), Game.HEALTH_X_PADDING + i*Game.HEALTH_SPACING, Game.HEALTH_Y_PADDING);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
+                g.drawString(game.getHealthDigit(i), Game.HEALTH_X_PADDING + i*(Game.HEALTH_SPACING+2), Game.HEALTH_Y_PADDING-2);
+            }
+
+            g.drawImage(new ImageIcon("Resources/black coin.png").getImage(), Game.COIN_X_PADDING+2, Game.COIN_Y_PADDING-3, Game.COIN_WIDTH, Game.COIN_HEIGHT, this);
+            g.drawImage(new ImageIcon("Resources/coin.png").getImage(), Game.COIN_X_PADDING, Game.COIN_Y_PADDING, Game.COIN_WIDTH, Game.COIN_HEIGHT, this);
+            for (int i = 0; i < 3; i++) {
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
+                g.setColor(Color.BLACK);
+                g.drawString(game.getMoneyDigit(i), Game.MONEY_X_PADDING + i*Game.MONEY_SPACING, Game.MONEY_Y_PADDING);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
+                g.drawString(game.getMoneyDigit(i), Game.MONEY_X_PADDING + i*(Game.MONEY_SPACING+2), Game.MONEY_Y_PADDING-2);
+            }
+
+            for (Projectile p : game.getActiveProjectiles()) {
+                p.draw(g, GameViewer.this);
+            }
 
 //        for (BalloonNode node : Game.NODES) {
 //            node.draw(g);
 //        }
+        }
     }
+
+//    public void paint(Graphics g) {
+//
+//    }
 }

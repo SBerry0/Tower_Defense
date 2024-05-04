@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Balloon extends Sprite {
 
-    private static final int[] SPEEDS = {10, 10, 15, 20, 5, 10};
+    private static final int[] SPEEDS = {3, 4, 5, 6, 7, 10};
     private int health;
     private int speed;
     private int direction;
@@ -26,6 +26,14 @@ public class Balloon extends Sprite {
         }
         this.direction = Game.EAST;
         nodeNum = 0;
+    }
+
+    public void reduceHealth() {
+        health --;
+        if (health <= 0) {
+            isAlive = false;
+
+        }
     }
 
     public void move(Game g) {
@@ -63,7 +71,7 @@ public class Balloon extends Sprite {
     public int getDistance(int x, int y) {
         int a = super.getX() - x;
         int b = super.getY() - y;
-        return (int) (Math.sqrt(1.0 * (a*a)+(b*b)));
+        return (int) (Math.sqrt((a*a)+(b*b)));
     }
 
     public void draw(Graphics g, GameViewer viewer) {

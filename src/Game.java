@@ -3,10 +3,10 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Game implements MouseListener, MouseMotionListener, ActionListener {
-    public static final int NORTH = 9,
-                            EAST = 18,
-                            SOUTH = 27,
-                            WEST = 36;
+    public static final int NORTH = 90,
+                            EAST = 180,
+                            SOUTH = 270,
+                            WEST = 360;
     public static final int NODE_NUM_LENGTH = 65;
     public static final BalloonNode[] NODES = {new BalloonNode(605, 300, NORTH),
                             new BalloonNode(585, 100, WEST),
@@ -20,7 +20,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                             new BalloonNode(905, 580, WEST),
                             new BalloonNode(495, 555, SOUTH),
                             new BalloonNode(0, 0, 0)};
-    public static final int SLEEP_TIME = 75;
+    public static final int SLEEP_TIME = 25;
+    public static final int COUNTER_MAX = 950 / SLEEP_TIME;
     public static final int WINDOW_HEIGHT = 798,
                             WINDOW_WIDTH = 1539;
     public static final int SELECTION_START = 1239,
@@ -32,10 +33,20 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                             PLAY_X_START = SELECTION_START + PLAY_X_PADDING,
                             PLAY_Y_START = WINDOW_HEIGHT - PLAY_HEIGHT - PLAY_X_PADDING;
     public static final int HEALTH_X_PADDING = 75,
-                            HEART_X_PADDING = 60,
                             HEALTH_Y_PADDING = 75,
-                            HEART_Y_PADDING = 60,
                             HEALTH_SPACING = 20;
+    public static final int HEART_X_PADDING = 15,
+                            HEART_Y_PADDING = 35,
+                            HEART_WIDTH = 52,
+                            HEART_HEIGHT = 52;
+
+    public static final int MONEY_X_PADDING = 233,
+                            MONEY_Y_PADDING = 75,
+                            MONEY_SPACING = 20;
+    public static final int COIN_X_PADDING = 175,
+                            COIN_Y_PADDING = 35,
+                            COIN_WIDTH = 52,
+                            COIN_HEIGHT = 52;
 
     public static final int BALLOON_STARTING_X = -20,
                             BALLOON_STARTING_Y = 328,
@@ -48,7 +59,9 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private int health;
     private int money;
     private int wave;
+    private int counter;
     private ArrayList<Monkey> monkeys;
+    private ArrayList<Projectile> activeProjectiles;
     private Wave[] waves;
     private boolean isOver;
     private boolean isPlaying;
@@ -59,16 +72,24 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         money = 100;
         health = 200;
         wave = 0;
+        counter = 0;
         monkeys = new ArrayList<>();
         selections = new boolean[] {false, false, false};
+        activeProjectiles = new ArrayList<>();
         // read the waves from a csv
         // temporary hardcoded first wave
         waves = new Wave[1];
         ArrayList<Balloon> loons = new ArrayList<Balloon>();
+        ArrayList<Balloon> loons2 = new ArrayList<Balloon>();
         for (int i = 0; i < 15; i++) {
             loons.add(new Balloon(1, i));
+//            loons2.add(new Balloon(1, i));
         }
-        waves[0] = new Wave(loons);
+        for (int i = 0; i < 1; i++) {
+            loons2.add(new Balloon(2, i));
+        }
+        waves[0] = new Wave(loons2);
+
         isOver = false;
         isPlaying = false;
         viewer = new GameViewer(this);
@@ -83,8 +104,20 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         Game g = new Game();
     }
 
-    public void addMonkey(Monkey monkey) {
-        monkeys.add(monkey);
+    public void addProjectile(Projectile projectile) {
+        activeProjectiles.add(projectile);
+    }
+
+    public void refreshProjectiles() {
+        for (int i = 0; i < activeProjectiles.size(); i++) {
+            if (!activeProjectiles.get(i).isActive()) {
+                activeProjectiles.remove(i--);
+            }
+        }
+    }
+
+    private void incrementCounter() {
+        counter = (counter + 1) % COUNTER_MAX;
     }
 
     public int getHealth() {
@@ -95,6 +128,13 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             return 0 + "";
         }
         return "" + (Integer.toString(health)).charAt(i);
+    }
+
+    public String getMoneyDigit(int i) {
+        if (Integer.toString(money).length() <= i) {
+            return 0 + "";
+        }
+        return "" + (Integer.toString(money)).charAt(i);
     }
 
     public BalloonNode getNode(int nodeNum) {
@@ -118,6 +158,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
 
     public int getMoney() {
         return money;
+    }
+
+    public ArrayList<Projectile> getActiveProjectiles() {
+        return activeProjectiles;
     }
 
     public ArrayList<Monkey> getMonkeys() {
@@ -158,7 +202,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             }
             // Check if placed on the path
             else if (viewer.containsGray(x, y)) {
-                monkeys.add(new Monkey(selected, x, y));
+                monkeys.add(new Monkey(selected, x, y, counter));
                 selections[selected] = false;
             } else {
                 System.out.println("on gray dummy");
@@ -211,7 +255,21 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public void actionPerformed(ActionEvent e) {
         if (isPlaying)
             getCurrentWave().moveBalloons(this);
+        refreshProjectiles();
+        incrementCounter();
+//        System.out.println(counter);
+        for (Projectile p : activeProjectiles) {
+            p.move(getCurrentWave());
+        }
+        for (Monkey m : monkeys) {
+//            System.out.println("monkey: " + m.getDelayNum());
+            if (m.getDelayNum() == counter) {
+                m.shoot(getCurrentWave(), this);
+            }
+        }
         viewer.repaint();
+
+        // save current time, check if it's
     }
 
     @Override

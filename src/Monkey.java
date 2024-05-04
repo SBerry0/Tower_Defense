@@ -1,27 +1,34 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Monkey extends Sprite{
     public static final int NUM_MONKEYS = 3;
-    public static final int[] RANGES = {10, 10, 20};
+    public static final int[] RANGES = {150, 150, 20};
     public static final int[] PIERCINGS = {2, 3, 3};
-    public static final int[] SPEED = {3, 3, 10};
+    public static final int[] SPEED = {15, 3, 10};
     // Milliseconds
-    private static final int[] DELAYS = {1000, 1000, 750};
+    private static final int[] DELAYS = {950, 1000, 750};
     private static final String[] NAMES = {"Dart Monkey", "Glue Monkey", "Cannon"};
     private static final int SELECT_WIDTH = 44,
                             SELECT_HEIGHT = 57;
+    private int counter;
     private int range;
     private int piercing;
     private int delay;
     private String name;
-    public Monkey (int monkeyType, int x, int y) {
+    private ArrayList<Projectile> projectiles;
+    int monkeyType;
+    public Monkey (int monkeyType, int x, int y, int counter) {
         super(new ImageIcon("Resources/Monkeys/"+monkeyType+".png").getImage(), x, y);
         if (monkeyType < NUM_MONKEYS) {
+            this.counter = counter;
+            this.monkeyType = monkeyType;
             this.range = RANGES[monkeyType];
             this.piercing = PIERCINGS[monkeyType];
             this.delay = DELAYS[monkeyType];
             this.name = NAMES[monkeyType];
+            this.projectiles = new ArrayList<>();
         }
     }
 
@@ -53,25 +60,30 @@ public class Monkey extends Sprite{
 
     public void draw(Graphics g, GameViewer viewer) {
         super.draw(g, viewer);
+
     }
 
-    public void shoot(Balloon[] balloons) {
-        return;
+    public void shoot(Wave wave, Game game) {
+        if (wave.getClosestBalloonDist(super.getX(), super.getY()) <= range) {
+            // some way to check if delay is up...
+            // check time
+            game.addProjectile(new Projectile(monkeyType, super.getX(), super.getY(), game.getCurrentWave()));
+            System.out.println("new projectile");
+        }
         // iff the closest balloon's distance is less than range...
         // shoot in its direction then wait the delay
     }
 
-    public int calcClosestBalloonDirection(Wave wave) {
-        Balloon balloon = wave.getClosestBalloon(super.getX(), super.getY());
-        return 0;
-    }
-
-    public int calcClosestBalloonDistance(Wave wave) {
-        Balloon balloon = wave.getClosestBalloon(super.getX(), super.getY());
-        return balloon.getDistance(super.getX(), super.getY());
-    }
+//    public int calcClosestBalloonDistance(Wave wave) {
+//        Balloon balloon = wave.getClosestBalloon(super.getX(), super.getY());
+//        return balloon.getDistance(super.getX(), super.getY());
+//    }
 
     public int getRange() {
         return range;
+    }
+
+    public int getDelayNum() {
+        return counter;
     }
 }
