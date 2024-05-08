@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Game implements MouseListener, MouseMotionListener, ActionListener {
@@ -10,7 +11,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public static final int NODE_NUM_LENGTH = 65;
     public static final BalloonNode[] NODES = {new BalloonNode(605, 300, NORTH),
                             new BalloonNode(585, 100, WEST),
-                            new BalloonNode(345, 100, SOUTH),
+                            new BalloonNode(342, 100, SOUTH),
                             new BalloonNode(365, 630, WEST),
                             new BalloonNode(145, 605, NORTH),
                             new BalloonNode(175, 410, EAST),
@@ -25,29 +26,28 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public static final int WINDOW_HEIGHT = 798,
                             WINDOW_WIDTH = 1539;
     public static final int SELECTION_START = 1239,
-                            SELECTION_X_PADDING = 50,
+                            SELECTION_X_PADDING = 120,
                             SELECTION_Y_PADDING  = 70;
     public static final int PLAY_X_PADDING = 30,
                             PLAY_WIDTH = (WINDOW_WIDTH - SELECTION_START) - PLAY_X_PADDING*2,
                             PLAY_HEIGHT = 100,
                             PLAY_X_START = SELECTION_START + PLAY_X_PADDING,
-                            PLAY_Y_START = WINDOW_HEIGHT - PLAY_HEIGHT - PLAY_X_PADDING;
+                            PLAY_Y_START = WINDOW_HEIGHT - PLAY_HEIGHT - PLAY_X_PADDING - 15;
     public static final int HEALTH_X_PADDING = 75,
-                            HEALTH_Y_PADDING = 75,
+                            HEALTH_Y_PADDING = 50,
                             HEALTH_SPACING = 20;
     public static final int HEART_X_PADDING = 15,
-                            HEART_Y_PADDING = 35,
+                            HEART_Y_PADDING = 15,
                             HEART_WIDTH = 52,
                             HEART_HEIGHT = 52;
 
     public static final int MONEY_X_PADDING = 233,
-                            MONEY_Y_PADDING = 75,
+                            MONEY_Y_PADDING = 50,
                             MONEY_SPACING = 20;
     public static final int COIN_X_PADDING = 175,
-                            COIN_Y_PADDING = 35,
+                            COIN_Y_PADDING = 15,
                             COIN_WIDTH = 52,
                             COIN_HEIGHT = 52;
-
     public static final int BALLOON_STARTING_X = -20,
                             BALLOON_STARTING_Y = 328,
                             BALLOON_SEPARATION = 14;
@@ -55,6 +55,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                             GLUE_MONKEY = 1,
                             CANNON = 2;
     public static final String BG_PATH = "Resources/MonkeyMeadow.png";
+    public static final int PROJECTILE_HIT_DISTANCE = 50;
     private boolean[] selections;
     private int health;
     private int money;
@@ -69,7 +70,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private Timer timer;
 
     public Game() throws Exception {
-        money = 100;
+        money = 250;
         health = 200;
         wave = 0;
         counter = 0;
@@ -77,18 +78,19 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         selections = new boolean[] {false, false, false};
         activeProjectiles = new ArrayList<>();
         // read the waves from a csv
-        // temporary hardcoded first wave
-        waves = new Wave[1];
+        // temporary hardcoded first two waves
+        waves = new Wave[2];
         ArrayList<Balloon> loons = new ArrayList<Balloon>();
         ArrayList<Balloon> loons2 = new ArrayList<Balloon>();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 155; i++) {
             loons.add(new Balloon(1, i));
             loons2.add(new Balloon(1, i));
         }
         for (int i = 0; i < 10; i++) {
             loons2.add(new Balloon(2, i));
         }
-        waves[0] = new Wave(loons2);
+        waves[0] = new Wave(loons);
+        waves[1] = new Wave(loons2);
 
         isOver = false;
         isPlaying = false;
@@ -123,18 +125,26 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public int getHealth() {
         return health;
     }
-    public String getHealthDigit(int i) {
-        if (Integer.toString(health).length() <= i) {
-            return 0 + "";
-        }
-        return "" + (Integer.toString(health)).charAt(i);
-    }
 
-    public String getMoneyDigit(int i) {
-        if (Integer.toString(money).length() <= i) {
-            return 0 + "";
+    public String getIntDigit(int i, int number) {
+        if (Integer.toString(number).length() == 4) {
+            if (i == 0)
+                return (Integer.toString(number)).charAt(i) + ",";
+            return "" + (Integer.toString(number)).charAt(i);
         }
-        return "" + (Integer.toString(money)).charAt(i);
+        if (Integer.toString(number).length() == 3)
+            return "" + (Integer.toString(number)).charAt(i);
+        if (Integer.toString(number).length() == 2) {
+            if (i == 0)
+                return "0";
+            return "" + (Integer.toString(number)).charAt(i-1);
+        }
+        if (Integer.toString(number).length() == 1) {
+            if (i == 0 || i == 1)
+                return "0";
+            return "" + (Integer.toString(number)).charAt(0);
+        }
+        return "0";
     }
 
     public BalloonNode getNode(int nodeNum) {
@@ -173,23 +183,22 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         if (health <= 0) {
            isOver = true;
         }
-        System.out.println(health);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        System.out.println("clicked");
+//        System.out.println("clicked");
 
         // check if clicking play button...
         if (playButtonIsClicked(x, y)) {
             isPlaying = true;
-            System.out.println("we playing now");
+//            System.out.println("we playing now");
             return;
         }
 
-        int monkeyType = Monkey.getSelection(x, y);
+        int monkeyType = GameViewer.getMonkeySelection(x, y);
         // If clicked on the field...
         if (monkeyType == -1) {
             int selected = whichSelected();
@@ -201,8 +210,15 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                 System.out.println("on monkey dummy");
             }
             // Check if placed on the path
-            else if (viewer.containsGray(x, y)) {
-                monkeys.add(new Monkey(selected, x, y, counter));
+            else if (!viewer.isOnGray(x, y)) {
+                try {
+                    if (Monkey.PRICES[selected] <= money) {
+                        money -= Monkey.PRICES[selected];
+                        monkeys.add(new Monkey(selected, x, y, counter));
+                    }
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
                 selections[selected] = false;
             } else {
                 System.out.println("on gray dummy");
@@ -215,6 +231,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
 
     public void incrementMoney() {
         money++;
+        System.out.println(money);
     }
 
     private boolean playButtonIsClicked(int x, int y) {
@@ -225,7 +242,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         for (Monkey m: monkeys) {
             if (Math.abs(m.getX() - x) < Sprite.DEFAULT_SPRITE_LENGTH / 3 &&
                     Math.abs(m.getY() - y) < Sprite.DEFAULT_SPRITE_LENGTH / 3) {
-                System.out.println(Math.abs(m.getX() - x));
+//                System.out.println(Math.abs(m.getX() - x));
                 return true;
             }
         }
@@ -241,38 +258,84 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         return -1;
     }
 
+    public Monkey getClosestMonkey(int x, int y) {
+        int smallestDist = Integer.MAX_VALUE;
+        Monkey closestMonkey = null;
+        for (int i = 0; i < monkeys.size(); i++) {
+            int dist = monkeys.get(i).getDistance(x, y);
+            if (dist < smallestDist) {
+                smallestDist = dist;
+//                System.out.println("distance: " + smallestDist);
+                closestMonkey = monkeys.get(i);
+            }
+        }
+        return closestMonkey;
+    }
+
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (whichSelected() != -1) {
-            int x = e.getX();
-            int y = e.getY();
-            if (!monkeys.isEmpty()) {
-                int radius = monkeys.get(whichSelected()).getRange();
+        int x = e.getX();
+        int y = e.getY();
+        int radius = 100;
+        if (GameViewer.getMonkeySelection(x, y) == -1) {
+            // if about to place a monkey, draw a circle around the mouse
+            if (whichSelected() != -1 && !monkeys.isEmpty()) {
+                radius = monkeys.get(whichSelected()).getRange();
+                // draw a circle around the mouse
+            } else {
+                if (isOnMonkey(x, y)) {
+                    Monkey monkey = getClosestMonkey(x, y);
+                    radius = monkey.getRange();
+//                    int centerX = monkeyString.split(",");
+                    // draw a circle with the center point of the monkey's center with radius of the range
+                }
             }
-            // draw a circle around the center of the mouse as they drag it representing the radius of the selected monkey
         }
+            // draw a circle around the center of the mouse as they drag it representing the radius of the selected monkey
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (isPlaying)
-            getCurrentWave().moveBalloons(this);
-        refreshProjectiles();
-        getCurrentWave().refreshBalloons();
-        incrementCounter();
+        if (!isOver) {
+            if (isPlaying)
+                getCurrentWave().moveBalloons(this);
+            refreshProjectiles();
+            getCurrentWave().refreshBalloons();
+            incrementCounter();
 //        System.out.println(counter);
-        for (Projectile p : activeProjectiles) {
-            p.move(this);
-        }
-        for (Monkey m : monkeys) {
-//            System.out.println("monkey: " + m.getDelayNum());
-            if (m.getDelayNum() == counter) {
-                m.shoot(getCurrentWave(), this);
+            for (Projectile p : activeProjectiles) {
+                try {
+                    p.move(this);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
+            for (Monkey m : monkeys) {
+//            System.out.println("monkey: " + m.getDelayNum());
+                if (m.getDelayNum() == counter) {
+                    try {
+                        m.shoot(getCurrentWave(), this);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+            viewer.repaint();
+            if (getCurrentWave().isEmpty()) {
+                isPlaying = false;
+                nextWave();
+            }
+        } else {
+            System.out.println("game over");
+            timer.stop();
         }
-        viewer.repaint();
+    }
 
-        // save current time, check if it's
+    private void nextWave() {
+        wave++;
+        if (wave >= waves.length) {
+            isOver = true;
+        }
     }
 
     @Override

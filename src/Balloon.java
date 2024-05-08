@@ -1,5 +1,8 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Balloon extends Sprite {
@@ -11,8 +14,8 @@ public class Balloon extends Sprite {
     private int nodeNum;
     private boolean isAlive;
 
-    public Balloon(int health, int balloonNum) {
-        super(new ImageIcon("Resources/Balloons/" + health + ".png").getImage(),
+    public Balloon(int health, int balloonNum) throws IOException {
+        super(ImageIO.read(new File("Resources/Balloons/" + health + ".png")),
                 Game.BALLOON_STARTING_X - (balloonNum * Game.BALLOON_SEPARATION),
                 Game.BALLOON_STARTING_Y,
                 49, 63);
@@ -28,7 +31,7 @@ public class Balloon extends Sprite {
         nodeNum = 0;
     }
 
-    public void reduceHealth() {
+    public void reduceHealth() throws IOException {
         health --;
         if (health <= 0) {
             isAlive = false;
@@ -37,8 +40,8 @@ public class Balloon extends Sprite {
         }
     }
 
-    public void refreshBalloonState() {
-        super.changeImage(new ImageIcon("Resources/Balloons/" + health + ".png").getImage());
+    public void refreshBalloonState() throws IOException {
+        super.changeImage(ImageIO.read(new File("Resources/Balloons/" + health + ".png")));
         this.speed = SPEEDS[health - 1];
     }
 
@@ -78,11 +81,7 @@ public class Balloon extends Sprite {
         this.nodeNum = Math.min(nodeNum + 1, Game.NODES.length - 1);
     }
 
-    public int getDistance(int x, int y) {
-        int a = super.getX() - x;
-        int b = super.getY() - y;
-        return (int) (Math.sqrt((a*a)+(b*b)));
-    }
+
 
     public void draw(Graphics g, GameViewer viewer) {
         if (isAlive)

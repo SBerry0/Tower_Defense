@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="379ee159-b628-4695-8b74-60c4654e9c7f" name="Changes" comment="V1 Code, shooting works">
-      <change afterPath="$PROJECT_DIR$/Resources/Darts/0.png" afterDir="false" />
+    <list default="true" id="379ee159-b628-4695-8b74-60c4654e9c7f" name="Changes" comment="Shooting actually makes contact with the balloons and money is added">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Balloon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Balloon.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GameViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameViewer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Monkey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monkey.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Projectile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Projectile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Sprite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Sprite.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Wave.java" afterDir="false" />
@@ -60,6 +61,9 @@
       <recent name="$PROJECT_DIR$/Resources/Balloons" />
       <recent name="$PROJECT_DIR$/Resources/MonkeySelections" />
       <recent name="$PROJECT_DIR$/Resources/Monkeys" />
+    </key>
+    <key name="IntroduceConstantDialog.RECENTS_KEY">
+      <recent name="Game" />
     </key>
   </component>
   <component name="RunManager">
@@ -128,7 +132,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714802663689</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Shooting actually makes contact with the balloons and money is added">
+      <option name="closed" value="true" />
+      <created>1714856977078</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1714856977078</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -138,6 +150,17 @@
     <MESSAGE value="Balloon bug fixed. Next step is to create a health counter in the front end. After that I have to get Monkeys shooting at closest balloons. Then I have to get a money system in place. Then I have to get different types of monkeys." />
     <MESSAGE value="Health is being displayed with an outline" />
     <MESSAGE value="V1 Code, shooting works" />
-    <option name="LAST_COMMIT_MESSAGE" value="V1 Code, shooting works" />
+    <MESSAGE value="Shooting actually makes contact with the balloons and money is added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Shooting actually makes contact with the balloons and money is added" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint type="java-exception">
+          <properties class="java.lang.ArithmeticException" package="java.lang" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

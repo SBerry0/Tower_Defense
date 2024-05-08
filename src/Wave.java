@@ -56,6 +56,8 @@ public class Wave {
         return smallestDist;
     }
 
+    public boolean isEmpty() { return wave.isEmpty(); }
+
     public void remove(Balloon balloon) {
         wave.remove(balloon);
     }
