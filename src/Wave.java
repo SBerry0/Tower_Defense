@@ -25,7 +25,8 @@ public class Wave {
     public Balloon getClosestBalloon(int x, int y) {
         int smallestDist = Integer.MAX_VALUE;
         Balloon closestBalloon = null;
-        for (int i = 0; i < wave.size(); i++) {
+        // check arrayList backwards so it sends the higher health balloons first
+        for (int i = wave.size()-1; i >= 0; i--) {
             int dist = wave.get(i).getDistance(x, y);
             if (dist < smallestDist) {
                 smallestDist = dist;

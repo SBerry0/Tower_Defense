@@ -64,7 +64,7 @@ public class Projectile extends Sprite {
         return false;
     }
     public void move(Game game) throws IOException {
-        if (poppedBalloons.size() >= piercing || super.getX() < 0 || super.getX() > Game.WINDOW_WIDTH ||
+        if (poppedBalloons.size() >= piercing || super.getX() < 0 || super.getX() > Game.SELECTION_START ||
                 super.getY() < 0 || super.getY() > Game.WINDOW_HEIGHT) {
             isActive = false;
         }

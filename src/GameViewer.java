@@ -90,7 +90,8 @@ public class GameViewer extends JFrame {
             g.setColor(Color.YELLOW);
             g.fillRoundRect(x - 35, y-23, SELECT_WIDTH + 70, SELECT_HEIGHT + 15, 8, 8);
         }
-        g.drawImage(new ImageIcon("Resources/MonkeySelections/"+monkeyType+".png").getImage(), x, y-15, SELECT_WIDTH, SELECT_HEIGHT, viewer);
+        Image i = new ImageIcon("Resources/MonkeySelections/"+monkeyType+".png").getImage();
+        g.drawImage(i, x, y-15, i.getWidth(viewer) / 10, i.getHeight(viewer) / 10, viewer);
         g.setColor(Color.WHITE);
         g.setFont(new Font("Luckiest Guy", Font.BOLD, 18));
         g.drawString(Monkey.NAMES[monkeyType], x - 33, y+65);
@@ -128,6 +129,7 @@ public class GameViewer extends JFrame {
             }
             drawHealth(g);
             drawMoney(g);
+            drawWave(g);
 
             for (Projectile p : game.getActiveProjectiles()) {
                 p.draw(g, GameViewer.this);
@@ -144,10 +146,10 @@ public class GameViewer extends JFrame {
             for (int i = 0; i < 3; i++) {
                 g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
                 g.setColor(Color.BLACK);
-                g.drawString(game.getIntDigit(i, game.getHealth()), Game.HEALTH_X_PADDING + i*Game.HEALTH_SPACING, Game.HEALTH_Y_PADDING);
+                g.drawString(game.getIntThreeDigit(i, game.getHealth()), Game.HEALTH_X_PADDING + i*Game.CHAR_SPACING, Game.CHAR_Y_PADDING);
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
-                g.drawString(game.getIntDigit(i, game.getHealth()), Game.HEALTH_X_PADDING + i*(Game.HEALTH_SPACING+2), Game.HEALTH_Y_PADDING-2);
+                g.drawString(game.getIntThreeDigit(i, game.getHealth()), Game.HEALTH_X_PADDING + i*(Game.CHAR_SPACING+2), Game.CHAR_Y_PADDING-2);
             }
         }
 
@@ -157,11 +159,42 @@ public class GameViewer extends JFrame {
             for (int i = 0; i < 3; i++) {
                 g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
                 g.setColor(Color.BLACK);
-                g.drawString(game.getIntDigit(i, game.getMoney()), Game.MONEY_X_PADDING + i*Game.MONEY_SPACING, Game.MONEY_Y_PADDING);
+                g.drawString(game.getIntThreeDigit(i, game.getMoney()), Game.MONEY_X_PADDING + i*Game.CHAR_SPACING, Game.CHAR_Y_PADDING);
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
-                g.drawString(game.getIntDigit(i, game.getMoney()), Game.MONEY_X_PADDING + i*(Game.MONEY_SPACING+2), Game.MONEY_Y_PADDING-2);
+                g.drawString(game.getIntThreeDigit(i, game.getMoney()), Game.MONEY_X_PADDING + i*(Game.CHAR_SPACING+2), Game.CHAR_Y_PADDING-2);
             }
+        }
+
+        private void drawWave(Graphics g) {
+            String out = "Wave";
+            for (int i = 0; i < 4; i++) {
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
+                g.setColor(Color.BLACK);
+                g.drawString(String.valueOf(out.charAt(i)), Game.WAVE_X_PADDING + i*Game.CHAR_SPACING, Game.CHAR_Y_PADDING);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
+                g.drawString(String.valueOf(out.charAt(i)), Game.WAVE_X_PADDING + i*(Game.CHAR_SPACING+2), Game.CHAR_Y_PADDING-2);
+            }
+
+            for (int i = 0; i < 2; i++) {
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
+                g.setColor(Color.BLACK);
+                g.drawString(game.getIntTwoDigit(i, game.getWaveNum() + 1), Game.WAVE_X_PADDING + 110 + i*Game.CHAR_SPACING, Game.CHAR_Y_PADDING);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
+                g.drawString(game.getIntTwoDigit(i, game.getWaveNum() + 1), Game.WAVE_X_PADDING + 110 + i*(Game.CHAR_SPACING+2), Game.CHAR_Y_PADDING-2);
+            }
+            out = "/16";
+            for (int i = 0; i < 3; i++) {
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
+                g.setColor(Color.BLACK);
+                g.drawString(String.valueOf(out.charAt(i)), Game.WAVE_X_PADDING + 150 + i*Game.CHAR_SPACING, Game.CHAR_Y_PADDING);
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
+                g.drawString(String.valueOf(out.charAt(i)), Game.WAVE_X_PADDING + 150 + i*(Game.CHAR_SPACING+2), Game.CHAR_Y_PADDING-2);
+            }
+
         }
     }
 

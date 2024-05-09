@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Game implements MouseListener, MouseMotionListener, ActionListener {
     public static final int NORTH = 90,
@@ -34,16 +36,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                             PLAY_X_START = SELECTION_START + PLAY_X_PADDING,
                             PLAY_Y_START = WINDOW_HEIGHT - PLAY_HEIGHT - PLAY_X_PADDING - 15;
     public static final int HEALTH_X_PADDING = 75,
-                            HEALTH_Y_PADDING = 50,
-                            HEALTH_SPACING = 20;
+                            MONEY_X_PADDING = 233,
+                            WAVE_X_PADDING = 967;
     public static final int HEART_X_PADDING = 15,
                             HEART_Y_PADDING = 15,
                             HEART_WIDTH = 52,
                             HEART_HEIGHT = 52;
-
-    public static final int MONEY_X_PADDING = 233,
-                            MONEY_Y_PADDING = 50,
-                            MONEY_SPACING = 20;
+    public static final int CHAR_SPACING = 20,
+                            CHAR_Y_PADDING = 50;
     public static final int COIN_X_PADDING = 175,
                             COIN_Y_PADDING = 15,
                             COIN_WIDTH = 52,
@@ -51,9 +51,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public static final int BALLOON_STARTING_X = -20,
                             BALLOON_STARTING_Y = 328,
                             BALLOON_SEPARATION = 14;
+
     public static final int DART_MONKEY = 0,
                             GLUE_MONKEY = 1,
                             CANNON = 2;
+
+    public static final int NUM_WAVES = 16,
+                            STARTING_MONEY = 250,
+                            STARTING_HEALTH = 200;
     public static final String BG_PATH = "Resources/MonkeyMeadow.png";
     public static final int PROJECTILE_HIT_DISTANCE = 50;
     private boolean[] selections;
@@ -70,8 +75,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private Timer timer;
 
     public Game() throws Exception {
-        money = 250;
-        health = 200;
+        money = STARTING_MONEY;
+        health = STARTING_HEALTH;
         wave = 0;
         counter = 0;
         monkeys = new ArrayList<>();
@@ -79,18 +84,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         activeProjectiles = new ArrayList<>();
         // read the waves from a csv
         // temporary hardcoded first two waves
-        waves = new Wave[2];
-        ArrayList<Balloon> loons = new ArrayList<Balloon>();
-        ArrayList<Balloon> loons2 = new ArrayList<Balloon>();
-        for (int i = 0; i < 155; i++) {
-            loons.add(new Balloon(1, i));
-            loons2.add(new Balloon(1, i));
+        Scanner sc = new Scanner(new File("Resources/balloonCount.csv"));
+        int index = 0;
+        waves = new Wave[NUM_WAVES];
+        while (sc.hasNextLine())  //returns a boolean value
+        {
+            waves[index++] = new Wave(getBalloonsFromLine(sc.nextLine()));
         }
-        for (int i = 0; i < 10; i++) {
-            loons2.add(new Balloon(2, i));
-        }
-        waves[0] = new Wave(loons);
-        waves[1] = new Wave(loons2);
+        sc.close();
 
         isOver = false;
         isPlaying = false;
@@ -100,6 +101,23 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         this.viewer.addMouseMotionListener(this);
         timer = new Timer(SLEEP_TIME, this);
         timer.start();
+    }
+
+    // Modified from https://www.baeldung.com/java-csv-file-array
+    public ArrayList<Balloon> getBalloonsFromLine(String line) throws IOException {
+        int balloonNum = 0;
+        int health = 1;
+        ArrayList<Balloon> balloons = new ArrayList<Balloon>();
+        Scanner rowScanner = new Scanner(line);
+        rowScanner.useDelimiter(",");   //sets the delimiter pattern
+        while (rowScanner.hasNext()) {
+            int num = Integer.parseInt(rowScanner.next());
+            for (int i = 0; i < num; i++) {
+                balloons.add(new Balloon(health, balloonNum++));
+            }
+            health++;
+        }
+        return balloons;
     }
 
     public static void main(String[] args) throws Exception {
@@ -126,7 +144,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         return health;
     }
 
-    public String getIntDigit(int i, int number) {
+    public String getIntThreeDigit(int i, int number) {
         if (Integer.toString(number).length() == 4) {
             if (i == 0)
                 return (Integer.toString(number)).charAt(i) + ",";
@@ -147,6 +165,18 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         return "0";
     }
 
+    public String getIntTwoDigit(int i, int number) {
+        if (Integer.toString(number).length() == 2) {
+            return "" + (Integer.toString(number)).charAt(i);
+        }
+        if (Integer.toString(number).length() == 1) {
+            if (i == 0)
+                return "0";
+            return "" + (Integer.toString(number)).charAt(0);
+        }
+        return "0";
+    }
+
     public BalloonNode getNode(int nodeNum) {
         if (nodeNum >= NODES.length || nodeNum < 0) {
             return null;
@@ -160,6 +190,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
 
     public Wave getCurrentWave() {
         return waves[wave];
+    }
+
+    public int getWaveNum() {
+        return wave;
     }
 
     public boolean[] getSelections() {
@@ -300,9 +334,12 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             if (isPlaying)
                 getCurrentWave().moveBalloons(this);
             refreshProjectiles();
+            if (getCurrentWave() == null) {
+                isOver = true;
+                return;
+            }
             getCurrentWave().refreshBalloons();
             incrementCounter();
-//        System.out.println(counter);
             for (Projectile p : activeProjectiles) {
                 try {
                     p.move(this);
