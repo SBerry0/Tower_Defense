@@ -1,7 +1,5 @@
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +10,8 @@ public class Projectile extends Sprite {
     private int piercing;
     private boolean isActive;
     private int deltaX, deltaY;
+    private int width, height;
+    private int dartType;
     private ArrayList<Balloon> poppedBalloons;
 
     public Projectile(int dartType, int x, int y, Wave currentWave) throws IOException {
@@ -21,6 +21,9 @@ public class Projectile extends Sprite {
             this.piercing = Monkey.PIERCINGS[dartType];
             this.speed = Monkey.SPEED[dartType];
             this.isActive = true;
+            this.width = dartType == 1 ? 90 : WIDTH;
+            this.height = dartType == 1 ? 38 : HEIGHT;
+            this.dartType = dartType;
 
             int diffX = currentWave.getClosestBalloon(x, y).getX() - x;
             int diffY = currentWave.getClosestBalloon(x, y).getY() - y;
@@ -35,9 +38,11 @@ public class Projectile extends Sprite {
                 this.deltaX = diffX / ratio;
                 this.deltaY = diffY / ratio;
             }
-
-
         }
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 
     public boolean isTouchingBalloon (Game game) throws IOException {
@@ -45,48 +50,44 @@ public class Projectile extends Sprite {
         if (closest == null) {
             return false;
         }
-//        System.out.println(closest.getDistance(super.getX(), super.getY()));
-        // probably won't work, I have to check the range of the balloon
         if (closest.getDistance(super.getX(), super.getY()) < Game.PROJECTILE_HIT_DISTANCE) {
-//            System.out.println("in range");
             if (!poppedBalloons.contains(closest)) {
-//        }
-//        if (super.getX() >= closest.getX() && super.getX() <= closest.getX() + Sprite.DEFAULT_SPRITE_LENGTH
-//                && super.getY() < closest.getY() && super.getY() < closest.getY() + Sprite.DEFAULT_SPRITE_LENGTH
-//                && !poppedBalloons.contains(closest)) {
+
                 System.out.println("HIT!");
-                closest.reduceHealth();
-                game.incrementMoney();
+                if (dartType == Game.DART_MONKEY || dartType == Game.CANNON) {
+                    closest.reduceHealth();
+                } else {
+                    closest.slowDown();
+                }
+                game.addMoney(closest.getHealth());
                 poppedBalloons.add(closest);
                 return true;
             }
         }
         return false;
     }
-    public void move(Game game) throws IOException {
+
+    public void move() throws IOException {
         if (poppedBalloons.size() >= piercing || super.getX() < 0 || super.getX() > Game.SELECTION_START ||
                 super.getY() < 0 || super.getY() > Game.WINDOW_HEIGHT) {
             isActive = false;
-        }
-        if (isTouchingBalloon(game)) {
-//            System.out.println("adding to popped: " + poppedBalloons.size());
-//            System.out.println(piercing);
         }
         super.addX(deltaX);
         super.addY(deltaY);
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
     public void draw(Graphics g, GameViewer viewer) {
-        g.drawImage(Sprite.rotateImage(super.getImage(),
-                (deltaX > 0 ? Math.atan((double) (deltaY) / (deltaX)) :
-                        (Math.toRadians(180) + Math.atan((double) (deltaY) / (deltaX))))),
-                super.getX(), super.getY(), WIDTH, HEIGHT, viewer);
-
-//        super.draw(g, viewer);
+        double theta = deltaX > 0 ? Math.atan((double) (deltaY) / (deltaX)) :
+                (Math.toRadians(180) + Math.atan((double) (deltaY) / (deltaX)));
+        if (deltaX == 0) {
+            if (deltaY < 0) {
+                theta = Math.toRadians(90);
+            } else {
+                theta = Math.toRadians(270);
+            }
+        }
+        g.drawImage(Sprite.rotateImage(super.getImage(), theta),
+                super.getX(), super.getY(), width, height, viewer);
     }
 
 }

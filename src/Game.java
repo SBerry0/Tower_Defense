@@ -24,7 +24,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                             new BalloonNode(495, 555, SOUTH),
                             new BalloonNode(0, 0, 0)};
     public static final int SLEEP_TIME = 25;
-    public static final int COUNTER_MAX = 950 / SLEEP_TIME;
+    public static final int COUNTER_MAX = 1900 / SLEEP_TIME;
     public static final int WINDOW_HEIGHT = 798,
                             WINDOW_WIDTH = 1539;
     public static final int SELECTION_START = 1239,
@@ -56,11 +56,12 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                             GLUE_MONKEY = 1,
                             CANNON = 2;
 
-    public static final int NUM_WAVES = 16,
-                            STARTING_MONEY = 250,
-                            STARTING_HEALTH = 200;
+    public static final int NUM_WAVES = 17,
+                            STARTING_MONEY = 650,
+                            STARTING_HEALTH = 125;
     public static final String BG_PATH = "Resources/MonkeyMeadow.png";
     public static final int PROJECTILE_HIT_DISTANCE = 50;
+
     private boolean[] selections;
     private int health;
     private int money;
@@ -82,8 +83,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         monkeys = new ArrayList<>();
         selections = new boolean[] {false, false, false};
         activeProjectiles = new ArrayList<>();
-        // read the waves from a csv
-        // temporary hardcoded first two waves
+        // Read the waves from a csv
         Scanner sc = new Scanner(new File("Resources/balloonCount.csv"));
         int index = 0;
         waves = new Wave[NUM_WAVES];
@@ -109,7 +109,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         int health = 1;
         ArrayList<Balloon> balloons = new ArrayList<Balloon>();
         Scanner rowScanner = new Scanner(line);
-        rowScanner.useDelimiter(",");   //sets the delimiter pattern
+        rowScanner.useDelimiter(",");
         while (rowScanner.hasNext()) {
             int num = Integer.parseInt(rowScanner.next());
             for (int i = 0; i < num; i++) {
@@ -124,57 +124,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         Game g = new Game();
     }
 
-    public void addProjectile(Projectile projectile) {
-        activeProjectiles.add(projectile);
-    }
-
-    public void refreshProjectiles() {
-        for (int i = 0; i < activeProjectiles.size(); i++) {
-            if (!activeProjectiles.get(i).isActive()) {
-                activeProjectiles.remove(i--);
-            }
-        }
-    }
-
-    private void incrementCounter() {
-        counter = (counter + 1) % COUNTER_MAX;
-    }
-
     public int getHealth() {
         return health;
-    }
-
-    public String getIntThreeDigit(int i, int number) {
-        if (Integer.toString(number).length() == 4) {
-            if (i == 0)
-                return (Integer.toString(number)).charAt(i) + ",";
-            return "" + (Integer.toString(number)).charAt(i);
-        }
-        if (Integer.toString(number).length() == 3)
-            return "" + (Integer.toString(number)).charAt(i);
-        if (Integer.toString(number).length() == 2) {
-            if (i == 0)
-                return "0";
-            return "" + (Integer.toString(number)).charAt(i-1);
-        }
-        if (Integer.toString(number).length() == 1) {
-            if (i == 0 || i == 1)
-                return "0";
-            return "" + (Integer.toString(number)).charAt(0);
-        }
-        return "0";
-    }
-
-    public String getIntTwoDigit(int i, int number) {
-        if (Integer.toString(number).length() == 2) {
-            return "" + (Integer.toString(number)).charAt(i);
-        }
-        if (Integer.toString(number).length() == 1) {
-            if (i == 0)
-                return "0";
-            return "" + (Integer.toString(number)).charAt(0);
-        }
-        return "0";
     }
 
     public BalloonNode getNode(int nodeNum) {
@@ -200,6 +151,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         return selections;
     }
 
+    public ArrayList<Monkey> getMonkeys() {
+        return monkeys;
+    }
+
     public int getMoney() {
         return money;
     }
@@ -208,8 +163,88 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         return activeProjectiles;
     }
 
-    public ArrayList<Monkey> getMonkeys() {
-        return monkeys;
+    private boolean playButtonIsClicked(int x, int y) {
+        return (x > PLAY_X_START && x < PLAY_X_START+PLAY_WIDTH && y > PLAY_Y_START && y < PLAY_Y_START+PLAY_HEIGHT);
+    }
+
+    private int whichSelected() {
+        for (int i = 0; i < selections.length; i++) {
+            if (selections[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private boolean isOnMonkey(int x, int y) {
+        for (Monkey m: monkeys) {
+            if (Math.abs(m.getX() - x) < Sprite.DEFAULT_SPRITE_LENGTH / 3 &&
+                    Math.abs(m.getY() - y) < Sprite.DEFAULT_SPRITE_LENGTH / 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Monkey getClosestMonkey(int x, int y) {
+        int smallestDist = Integer.MAX_VALUE;
+        Monkey closestMonkey = null;
+        for (int i = 0; i < monkeys.size(); i++) {
+            int dist = monkeys.get(i).getDistance(x, y);
+            if (dist < smallestDist) {
+                smallestDist = dist;
+                closestMonkey = monkeys.get(i);
+            }
+        }
+        return closestMonkey;
+    }
+
+    public String getIntTwoDigit(int i, int number) {
+        if (Integer.toString(number).length() == 2) {
+            return "" + (Integer.toString(number)).charAt(i);
+        }
+        if (Integer.toString(number).length() == 1) {
+            if (i == 0)
+                return "0";
+            return "" + (Integer.toString(number)).charAt(0);
+        }
+        return "0";
+    }
+
+    public String getIntThreeDigit(int i, int number) {
+        if (Integer.toString(number).length() == 4) {
+            if (i == 0)
+                return (Integer.toString(number)).charAt(i) + ",";
+            return "" + (Integer.toString(number)).charAt(i);
+        }
+        if (Integer.toString(number).length() == 3)
+            return "" + (Integer.toString(number)).charAt(i);
+        if (Integer.toString(number).length() == 2) {
+            if (i == 0)
+                return "0";
+            return "" + (Integer.toString(number)).charAt(i-1);
+        }
+        if (Integer.toString(number).length() == 1) {
+            if (i == 0 || i == 1)
+                return "0";
+            return "" + (Integer.toString(number)).charAt(0);
+        }
+        return "0";
+    }
+
+    private void nextWave() {
+        wave++;
+        if (wave >= waves.length) {
+            isOver = true;
+        }
+    }
+
+    public void addProjectile(Projectile projectile) {
+        activeProjectiles.add(projectile);
+    }
+
+    private void incrementCounter() {
+        counter = (counter + 1) % COUNTER_MAX;
     }
 
     public void reduceHealth(int num) {
@@ -219,16 +254,27 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         }
     }
 
+    public void addMoney(int i) {
+        money+=i;
+        System.out.println(money);
+    }
+
+    public void refreshProjectiles() {
+        for (int i = 0; i < activeProjectiles.size(); i++) {
+            if (!activeProjectiles.get(i).isActive()) {
+                activeProjectiles.remove(i--);
+            }
+        }
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-//        System.out.println("clicked");
 
         // check if clicking play button...
         if (playButtonIsClicked(x, y)) {
             isPlaying = true;
-//            System.out.println("we playing now");
             return;
         }
 
@@ -244,7 +290,9 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                 System.out.println("on monkey dummy");
             }
             // Check if placed on the path
-            else if (!viewer.isOnGray(x, y)) {
+            else if (viewer.isOnGray(x, y)) {
+                System.out.println("on gray dummy");
+            } else {
                 try {
                     if (Monkey.PRICES[selected] <= money) {
                         money -= Monkey.PRICES[selected];
@@ -254,56 +302,18 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                     throw new RuntimeException(ex);
                 }
                 selections[selected] = false;
-            } else {
-                System.out.println("on gray dummy");
             }
         }
         else {
-            selections[monkeyType] = !selections[monkeyType];
-        }
-    }
-
-    public void incrementMoney() {
-        money++;
-        System.out.println(money);
-    }
-
-    private boolean playButtonIsClicked(int x, int y) {
-        return (x > PLAY_X_START && x < PLAY_X_START+PLAY_WIDTH && y > PLAY_Y_START && y < PLAY_Y_START+PLAY_HEIGHT);
-    }
-
-    private boolean isOnMonkey(int x, int y) {
-        for (Monkey m: monkeys) {
-            if (Math.abs(m.getX() - x) < Sprite.DEFAULT_SPRITE_LENGTH / 3 &&
-                    Math.abs(m.getY() - y) < Sprite.DEFAULT_SPRITE_LENGTH / 3) {
-//                System.out.println(Math.abs(m.getX() - x));
-                return true;
+            for (int i = 0; i < selections.length; i++) {
+                if (i == monkeyType) {
+                    selections[monkeyType] = !selections[monkeyType];
+                }
+                else {
+                    selections[i] = false;
+                }
             }
         }
-        return false;
-    }
-
-    private int whichSelected() {
-        for (int i = 0; i < selections.length; i++) {
-            if (selections[i]) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public Monkey getClosestMonkey(int x, int y) {
-        int smallestDist = Integer.MAX_VALUE;
-        Monkey closestMonkey = null;
-        for (int i = 0; i < monkeys.size(); i++) {
-            int dist = monkeys.get(i).getDistance(x, y);
-            if (dist < smallestDist) {
-                smallestDist = dist;
-//                System.out.println("distance: " + smallestDist);
-                closestMonkey = monkeys.get(i);
-            }
-        }
-        return closestMonkey;
     }
 
     @Override
@@ -314,7 +324,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         if (GameViewer.getMonkeySelection(x, y) == -1) {
             // if about to place a monkey, draw a circle around the mouse
             if (whichSelected() != -1 && !monkeys.isEmpty()) {
-                radius = monkeys.get(whichSelected()).getRange();
+//                radius = monkeys.get(whichSelected()).getRange();
                 // draw a circle around the mouse
             } else {
                 if (isOnMonkey(x, y)) {
@@ -334,7 +344,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             if (isPlaying)
                 getCurrentWave().moveBalloons(this);
             refreshProjectiles();
-            if (getCurrentWave() == null) {
+            if (getCurrentWave() == null || health <= 0) {
                 isOver = true;
                 return;
             }
@@ -342,36 +352,42 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             incrementCounter();
             for (Projectile p : activeProjectiles) {
                 try {
-                    p.move(this);
+                    p.move();
+                    p.isTouchingBalloon(this);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
             for (Monkey m : monkeys) {
 //            System.out.println("monkey: " + m.getDelayNum());
-                if (m.getDelayNum() == counter) {
-                    try {
-                        m.shoot(getCurrentWave(), this);
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                if (m.getMonkeyNum() == Game.DART_MONKEY || m.getMonkeyNum() == Game.GLUE_MONKEY) {
+                    if (m.getDelayNum() == counter || m.getDelayNum() + COUNTER_MAX / 2 == counter) {
+                        try {
+                            m.shoot(getCurrentWave(), this);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                } else {
+                    if (m.getDelayNum() == counter) {
+                        try {
+                            m.shoot(getCurrentWave(), this);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
+
             }
             viewer.repaint();
             if (getCurrentWave().isEmpty()) {
                 isPlaying = false;
+                money += (wave + 250);
                 nextWave();
             }
         } else {
             System.out.println("game over");
             timer.stop();
-        }
-    }
-
-    private void nextWave() {
-        wave++;
-        if (wave >= waves.length) {
-            isOver = true;
         }
     }
 

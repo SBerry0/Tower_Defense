@@ -24,6 +24,20 @@ public class GameViewer extends JFrame {
         createBufferStrategy(2);
     }
 
+    public static int getMonkeySelection(int x, int y) {
+        if (x > Game.SELECTION_START && x < Game.WINDOW_WIDTH) {
+            if (y < Game.SELECTION_Y_PADDING+SELECT_HEIGHT+100) {
+                return Game.DART_MONKEY;
+            }
+            if (y < Game.SELECTION_Y_PADDING+SELECT_HEIGHT+300) {
+                return Game.GLUE_MONKEY;
+            }
+            if (y < Game.SELECTION_Y_PADDING+2*SELECT_HEIGHT+600) {
+                return Game.CANNON;
+            }
+        }
+        return -1;
+    }
     public boolean isOnGray(int xValue, int yValue) {
         // From https://www.tutorialspoint.com/how-to-get-pixels-rgb-values-of-an-image-using-java-opencv-library
         // Modified by Sohum Berry
@@ -53,34 +67,13 @@ public class GameViewer extends JFrame {
         }
         return false;
     }
+
     private int getAverage(int[] nums) {
         int total = 0;
         for(int i : nums) {
             total += i;
         }
         return total / nums.length;
-    }
-
-    public void drawPlayButton(Graphics g) {
-        g.setColor(Color.green);
-        // change to image of gradient later
-        g.fillRoundRect(Game.PLAY_X_START, Game.PLAY_Y_START, Game.PLAY_WIDTH, Game.PLAY_HEIGHT, 20, 20);
-        Polygon p = new Polygon();
-        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23, Game.PLAY_Y_START + 15);
-        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23, Game.PLAY_Y_START + (Game.PLAY_HEIGHT-15));
-        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23 + (int) (Math.sqrt(Math.pow((Game.PLAY_HEIGHT-30), 2) - Math.pow((Game.PLAY_HEIGHT-30)/2, 2))), Game.PLAY_Y_START + (Game.PLAY_HEIGHT-30)/2 + 15);
-        g.setColor(Color.WHITE);
-        g.fillPolygon(p);
-    }
-
-    public static int getMonkeySelection(int x, int y) {
-        if (x > Game.SELECTION_START && x < Game.WINDOW_WIDTH) {
-            if (y < Game.SELECTION_Y_PADDING+SELECT_HEIGHT) {
-                return Game.DART_MONKEY;
-            }
-        }
-        // column two
-        return -1;
     }
 
     public void drawMonkeySelectable(Graphics g, GameViewer viewer, int monkeyType, int x, int y, boolean isSelected) {
@@ -99,47 +92,20 @@ public class GameViewer extends JFrame {
         g.drawString("$" + Monkey.PRICES[monkeyType], x - 5, y+88);
     }
 
+    public void drawPlayButton(Graphics g) {
+        g.setColor(Color.green);
+        // change to image of gradient later
+        g.fillRoundRect(Game.PLAY_X_START, Game.PLAY_Y_START, Game.PLAY_WIDTH, Game.PLAY_HEIGHT, 20, 20);
+        Polygon p = new Polygon();
+        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23, Game.PLAY_Y_START + 15);
+        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23, Game.PLAY_Y_START + (Game.PLAY_HEIGHT-15));
+        p.addPoint(Game.PLAY_X_START + (Game.PLAY_WIDTH / 2) - 23 + (int) (Math.sqrt(Math.pow((Game.PLAY_HEIGHT-30), 2) - Math.pow((Game.PLAY_HEIGHT-30)/2, 2))), Game.PLAY_Y_START + (Game.PLAY_HEIGHT-30)/2 + 15);
+        g.setColor(Color.WHITE);
+        g.fillPolygon(p);
+    }
+
     // Found this code online to stop the flickering of the screen
     private class DrawingPanel extends JPanel {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            g.setColor(Color.GRAY);
-            g.fillRect(0, -15, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
-            g.drawImage(map, 0, -15, Game.SELECTION_START, Game.WINDOW_HEIGHT, this);
-
-            for (int i = 0; i < 3; i++) {
-                drawMonkeySelectable(g, GameViewer.this, i,
-                        Game.SELECTION_START + Game.SELECTION_X_PADDING, Game.SELECTION_Y_PADDING + i*200,
-                        game.getSelections()[i]);
-            }
-
-
-            if (game.isPlaying()) {
-                for (Balloon b : game.getCurrentWave().getBalloons()) {
-                    b.draw(g, GameViewer.this);
-                }
-            }
-            for (Monkey m : game.getMonkeys()) {
-                m.draw(g, GameViewer.this, game);
-            }
-            if (!game.isPlaying()) {
-                drawPlayButton(g);
-            }
-            drawHealth(g);
-            drawMoney(g);
-            drawWave(g);
-
-            for (Projectile p : game.getActiveProjectiles()) {
-                p.draw(g, GameViewer.this);
-            }
-
-//        for (BalloonNode node : Game.NODES) {
-//            node.draw(g);
-//        }
-        }
-
         private void drawHealth(Graphics g) {
             g.drawImage(new ImageIcon("Resources/black heart.png").getImage(), Game.HEART_X_PADDING+2, Game.HEART_Y_PADDING-3, Game.HEART_WIDTH, Game.HEART_HEIGHT, this);
             g.drawImage(new ImageIcon("Resources/heart.png").getImage(), Game.HEART_X_PADDING, Game.HEART_Y_PADDING, Game.HEART_WIDTH, Game.HEART_HEIGHT, this);
@@ -185,7 +151,7 @@ public class GameViewer extends JFrame {
                 g.setFont(new Font("Luckiest Guy", Font.BOLD, 32));
                 g.drawString(game.getIntTwoDigit(i, game.getWaveNum() + 1), Game.WAVE_X_PADDING + 110 + i*(Game.CHAR_SPACING+2), Game.CHAR_Y_PADDING-2);
             }
-            out = "/16";
+            out = "/15";
             for (int i = 0; i < 3; i++) {
                 g.setFont(new Font("Luckiest Guy", Font.BOLD, 40));
                 g.setColor(Color.BLACK);
@@ -196,9 +162,38 @@ public class GameViewer extends JFrame {
             }
 
         }
-    }
 
-//    public void paint(Graphics g) {
-//
-//    }
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.setColor(Color.GRAY);
+            g.fillRect(0, -15, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
+            g.drawImage(map, 0, -15, Game.SELECTION_START, Game.WINDOW_HEIGHT, this);
+
+            for (int i = 0; i < 3; i++) {
+                drawMonkeySelectable(g, GameViewer.this, i,
+                        Game.SELECTION_START + Game.SELECTION_X_PADDING, Game.SELECTION_Y_PADDING + i*200,
+                        game.getSelections()[i]);
+            }
+
+            if (game.isPlaying()) {
+                for (Balloon b : game.getCurrentWave().getBalloons()) {
+                    b.draw(g, GameViewer.this);
+                }
+            }
+            for (Projectile p : game.getActiveProjectiles()) {
+                p.draw(g, GameViewer.this);
+            }
+            for (Monkey m : game.getMonkeys()) {
+                m.draw(g, GameViewer.this, game);
+            }
+            if (!game.isPlaying()) {
+                drawPlayButton(g);
+            }
+            drawHealth(g);
+            drawMoney(g);
+            drawWave(g);
+        }
+    }
 }

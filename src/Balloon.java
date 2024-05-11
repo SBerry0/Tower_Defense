@@ -3,11 +3,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.TimerTask;
 
 public class Balloon extends Sprite {
 
-    private static final int[] SPEEDS = {3, 4, 5, 6, 7, 10};
+    private static final int[] SPEEDS = {5, 6, 7, 8, 9, 12};
     private int health;
     private int speed;
     private int direction;
@@ -31,6 +31,22 @@ public class Balloon extends Sprite {
         nodeNum = 0;
     }
 
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void nextNode() {
+        this.nodeNum = Math.min(nodeNum + 1, Game.NODES.length - 1);
+    }
+
+    public void slowDown() {
+        speed = Math.max(1, speed-1);
+    }
+
     public void reduceHealth() throws IOException {
         health --;
         if (health <= 0) {
@@ -43,10 +59,6 @@ public class Balloon extends Sprite {
     public void refreshBalloonState() throws IOException {
         super.changeImage(ImageIO.read(new File("Resources/Balloons/" + health + ".png")));
         this.speed = SPEEDS[health - 1];
-    }
-
-    public boolean isAlive() {
-        return isAlive;
     }
 
     public void move(Game g) {
@@ -75,13 +87,7 @@ public class Balloon extends Sprite {
             direction = g.getNode(nodeNum).getNewDirection();
             nextNode();
         }
-
     }
-    public void nextNode() {
-        this.nodeNum = Math.min(nodeNum + 1, Game.NODES.length - 1);
-    }
-
-
 
     public void draw(Graphics g, GameViewer viewer) {
         if (isAlive)

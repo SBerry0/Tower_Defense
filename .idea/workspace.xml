@@ -4,15 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="379ee159-b628-4695-8b74-60c4654e9c7f" name="Changes" comment="waves and money system works. Monkey rotating needs some work and I have to create the csv for the waves. I have to get the images for the other types of monkeys. Create a Circle class to display the range. Create just one variable in main called currentCircle of something and draw it in GameViewer if it isn't null. Create a display for which wave it is on the top right.">
-      <change afterPath="$PROJECT_DIR$/Resources/MonkeySelections/1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Resources/MonkeySelections/2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Resources/balloonCount.csv" afterDir="false" />
+    <list default="true" id="379ee159-b628-4695-8b74-60c4654e9c7f" name="Changes" comment="Waves done. Monkey selection images found. Need to scale up the cannon image. Need to rotate the monkey still.">
+      <change afterPath="$PROJECT_DIR$/Resources/Darts/1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Resources/Darts/2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Resources/Monkeys/1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Resources/Monkeys/2.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/MonkeySelections/2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/MonkeySelections/2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/balloonCount.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/balloonCount.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Balloon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Balloon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BalloonNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/BalloonNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameViewer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameViewer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Monkey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Monkey.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Projectile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Projectile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Sprite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Sprite.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Wave.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,18 +36,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "SBerry0"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;SBerry0&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/SBerry0/Tower_Defense.git",
-    "accountId": "762ab5de-7619-4551-b7f6-17dac24a957d"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/SBerry0/Tower_Defense.git&quot;,
+    &quot;accountId&quot;: &quot;762ab5de-7619-4551-b7f6-17dac24a957d&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -69,9 +75,9 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Resources/MonkeySelections" />
-      <recent name="$PROJECT_DIR$/Resources/Monkeys" />
       <recent name="$PROJECT_DIR$/Resources/Darts" />
+      <recent name="$PROJECT_DIR$/Resources/Monkeys" />
+      <recent name="$PROJECT_DIR$/Resources/MonkeySelections" />
       <recent name="$PROJECT_DIR$/Resources" />
       <recent name="$PROJECT_DIR$/Resources/Balloons" />
     </key>
@@ -161,8 +167,27 @@
       <option name="project" value="LOCAL" />
       <updated>1715150410916</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Waves done. Monkey selection images found. Need to scale up the cannon image. Need to rotate the monkey still.">
+      <option name="closed" value="true" />
+      <created>1715231895421</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1715231895421</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="prototype of placing monkeys onto the field" />
@@ -173,7 +198,8 @@
     <MESSAGE value="V1 Code, shooting works" />
     <MESSAGE value="Shooting actually makes contact with the balloons and money is added" />
     <MESSAGE value="waves and money system works. Monkey rotating needs some work and I have to create the csv for the waves. I have to get the images for the other types of monkeys. Create a Circle class to display the range. Create just one variable in main called currentCircle of something and draw it in GameViewer if it isn't null. Create a display for which wave it is on the top right." />
-    <option name="LAST_COMMIT_MESSAGE" value="waves and money system works. Monkey rotating needs some work and I have to create the csv for the waves. I have to get the images for the other types of monkeys. Create a Circle class to display the range. Create just one variable in main called currentCircle of something and draw it in GameViewer if it isn't null. Create a display for which wave it is on the top right." />
+    <MESSAGE value="Waves done. Monkey selection images found. Need to scale up the cannon image. Need to rotate the monkey still." />
+    <option name="LAST_COMMIT_MESSAGE" value="Waves done. Monkey selection images found. Need to scale up the cannon image. Need to rotate the monkey still." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

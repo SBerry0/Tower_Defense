@@ -21,6 +21,7 @@ public class BalloonNode {
         return x > minX && x < maxX && y > minY && y < maxY;
     }
 
+    // Draw method for testing
     public void draw(Graphics g) {
         g.setColor(Color.pink);
         g.fillRect(minX, minY, maxX- minX, maxY - minY);
